@@ -1,0 +1,193 @@
+/* General styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    color: #fff;
+    text-align: center;
+}
+
+#game-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5em;
+    color: #f4e04d;
+    text-shadow: 0px 0px 10px #f4e04d;
+    margin-bottom: 20px;
+}
+
+/* Game area */
+#game-area {
+    position: relative;
+    height: 400px;
+    border: 3px solid #f4e04d;
+    margin-bottom: 20px;
+    background: #1a2a38;
+    overflow: hidden;
+    box-shadow: 0px 0px 20px 5px #000;
+}
+
+#enemy-area {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.enemy {
+    position: absolute;
+    font-size: 1.5em;
+    color: #ff6f61;
+    text-shadow: 0px 0px 5px #ff6f61;
+    animation: float 2s infinite;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(-5px);
+    }
+    50% {
+        transform: translateY(5px);
+    }
+    100% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Cannon */
+#cannon {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 30px;
+    background: #4df29f;
+    border-radius: 50%;
+    box-shadow: 0px 0px 15px #4df29f;
+}
+
+/* Bullet */
+.bullet {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #f4e04d;
+    border-radius: 50%;
+    box-shadow: 0px 0px 10px #f4e04d;
+    z-index: 2; /* Ensure bullets are above enemies */
+    transition: transform 0.5s linear; /* Smooth animation */
+}
+
+@keyframes shootBullet {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(-400px); /* Adjust height as needed */
+    }
+}
+
+/* Input area */
+#input-area {
+    margin-top: 20px;
+}
+
+#word-input {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    background: #2e3e4e;
+    color: #fff;
+    text-align: center;
+    box-shadow: 0px 0px 10px #000;
+}
+
+/* Score container */
+#score-container {
+    font-family: 'Orbitron', sans-serif;
+    margin-top: 10px;
+    font-size: 1.2em;
+}
+
+#score-container p {
+    margin: 0;
+}
+
+#score {
+    color: #4df29f;
+    text-shadow: 0px 0px 10px #4df29f;
+}
+
+/* Button Styles */
+#start-button {
+    background-color: #28a745; /* Green background */
+    color: white; /* White text */
+    border: none; /* No border */
+    padding: 15px 30px; /* Padding around the text */
+    font-size: 20px; /* Font size */
+    font-family: 'Roboto', sans-serif; /* Font family */
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s, transform 0.2s; /* Transition for smoothness */
+    margin-top: 20px; /* Space above the button */
+}
+
+/* Button Hover Effects */
+#start-button:hover {
+    background-color: #218838; /* Darker shade of green */
+    transform: scale(1.05); /* Slightly enlarge the button */
+}
+
+/* Button Active Effects */
+#start-button:active {
+    transform: scale(0.95); /* Slightly shrink the button when clicking */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Reduce the shadow */
+}
+
+/* Pop-up styles */
+#game-over-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border: 2px solid black;
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    z-index: 1000; /* Make sure it appears on top */
+}
+
+.popup-content {
+    background-color: #333; /* Background for the popup */
+    padding: 20px; /* Padding inside the popup */
+    border-radius: 10px; /* Rounded corners */
+    text-align: center; /* Center the text */
+}
+
+.hidden {
+    display: none;
+}
+
+#restart-button {
+    margin-top: 10px; /* Space above the button */
+    padding: 10px; /* Padding inside the button */
+    background-color: #28a745; /* Green background */
+    color: white; /* Button text color */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor */
+}
+
+#restart-button:hover {
+    background-color: #218838; /* Darker green on hover */
+}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Z-Type Game</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="game-container">
+        <h1>QuickType</h1>
+        <div id="game-area">
+            <div id="enemy-area"></div>
+            <div id="cannon"></div>
+        </div>
+        <div id="input-area">
+            <input type="text" id="word-input" placeholder="Type to shoot!" autofocus>
+        </div>
+        <div id="score-container">
+            <p>Score: <span id="score">0</span></p>
+        </div>
+        <button id="start-button">Start Game</button> <!-- Button to start music -->
+    </div>
+    <!-- Pop-up Message -->
+    <div id="game-over-popup" class="hidden">
+        <div class="popup-content">
+            <h2>Game Over!</h2>
+            <p>Final Score: <span id="final-score">0</span></p>
+            <button id="restart-button">Restart</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
