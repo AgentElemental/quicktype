@@ -64,21 +64,36 @@ function getRandomWord() {
     return words[Math.floor(Math.random() * words.length)];
 }
 
-// Create an enemy
 function createEnemy() {
+    if (!gameRunning) return; // Stop creating enemies if the game is over
+
     const enemy = document.createElement("div");
     enemy.classList.add("enemy");
     const word = getRandomWord();
     enemy.textContent = word;
-    enemy.style.left = `${Math.random() * 80 + 10}%`;
+
+    // Temporary element to calculate the width of the enemy text
+    document.body.appendChild(enemy);
+    const wordWidth = enemy.offsetWidth; // Get the width of the word
+    document.body.removeChild(enemy); // Remove the temporary element
+
+    const gameAreaWidth = enemyArea.offsetWidth; // Get the width of the game area
+    const maxLeft = gameAreaWidth - wordWidth; // Calculate the maximum allowed left position
+
+    // Generate a random left position ensuring the word fits within the game area
+    const randomLeft = Math.random() * maxLeft;
+    enemy.style.left = `${randomLeft}px`; // Use px for precise positioning
     enemy.style.top = "0%";
     enemy.dataset.word = word;
-    enemyArea.appendChild(enemy);
+
+    enemyArea.appendChild(enemy); // Add enemy to the game area
     activeEnemies.push(enemy);
 }
 
 // Move enemies
 function moveEnemies() {
+    if (!gameRunning) return; // Stop moving enemies if the game has ended
+
     activeEnemies.forEach((enemy) => {
         const currentTop = parseFloat(enemy.style.top);
         if (currentTop >= 90) {
@@ -88,7 +103,6 @@ function moveEnemies() {
         }
     });
 }
-
 // Create and animate bullet
 function createBullet(enemy) {
     const bullet = document.createElement("div");
@@ -146,11 +160,36 @@ function gameLoop() {
 
 // End the game
 function endGame() {
+    if (!gameRunning) return; // Prevent multiple executions of endGame
+
     gameRunning = false; // Set game running flag to false
-    clearInterval(); // Clear any intervals that were running
-    finalScoreDisplay.innerText = score; // Update final score in pop-up
-    gameOverPopup.classList.remove('hidden'); // Show the pop-up
+    clearInterval(enemySpawnInterval); // Stop enemy creation
+    finalScoreDisplay.innerText = score; // Update final score in the pop-up
+
+    // Stop all animations and keep enemies in place
+    activeEnemies.forEach(enemy => {
+        enemy.style.animationPlayState = "paused"; // Pause any CSS animations
+    });
+
+    wordInput.disabled = true; // Disable typing input
+    wordInput.value = ""; // Clear the input field
+    bgMusic1.pause(); // Stop background music
+    bgMusic2.pause(); // Stop alternate background music
+    gameOverPopup.classList.remove('hidden'); // Show the game-over pop-up
 }
+
+// Modified Start Button Logic
+let enemySpawnInterval; // Declare the interval globally
+startButton.addEventListener("click", () => {
+    if (!gameRunning) {
+        playBackgroundMusic(); // Play background music on start
+        gameRunning = true; // Update flag to true
+        gameLoop(); // Start the game loop
+        enemySpawnInterval = setInterval(createEnemy, 2500); // Start spawning enemies every 2.5 seconds
+        startButton.style.display = 'none'; // Hide button after starting
+        wordInput.disabled = false; // Enable input if it was disabled
+    }
+});
 
 // Restart the game by refreshing the page
 restartButton.addEventListener("click", () => {
