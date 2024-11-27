@@ -1,56 +1,62 @@
+
 const enemyArea = document.getElementById("enemy-area");
 const wordInput = document.getElementById("word-input");
 const scoreDisplay = document.getElementById("score");
 const cannon = document.getElementById("cannon");
-const startButton = document.getElementById("start-button");
-const gameOverPopup = document.getElementById("game-over-popup");
-const finalScoreDisplay = document.getElementById("final-score");
-const restartButton = document.getElementById("restart-button");
+const startButton = document.getElementById("start-button"); // Reference to the start button
+const gameOverPopup = document.getElementById("game-over-popup"); // Reference to the game over popup
+const finalScoreDisplay = document.getElementById("final-score"); // Final score display in pop-up
+const restartButton = document.getElementById("restart-button"); // Reference to the restart button
 
-const waves = [
-    { words: ["cat", "dog", "sun", "moon", "tree", "rock", "car", "ship", "bird", "fish", "light", "snow", "cloud", "leaf", "chair", "book", "river", "wall", "sand", "shoe", "star", "house", "apple", "bread", "grass", "blue", "red", "ball", "game", "snow", "sky", "boat", "table", "glass", "milk", "bread", "ring", "shoe", "horse", "hat", "cup", "pen", "bell", "map", "egg", "bell", "rock", "bird", "wolf", "moon"], spawnInterval: 2500, enemySpeed: 1 },
-    { words: ["dragon", "comet", "galaxy", "laser", "engine", "cloud", "radar", "planet", "rocket", "spaceship", "wizard", "thunder", "tornado", "galaxy", "asteroid", "lightning", "plasma", "volcano", "ice", "ocean", "shield", "cannon", "nebula", "vortex", "lunar", "shield", "storm", "pulse", "wave", "force", "cosmic", "myth", "weapon", "armor", "comet", "steam", "orbital", "radio", "photon", "blade", "exo", "android", "gravity", "hacker", "reactor", "crystal", "energy", "rover", "nebula", "vortex"], spawnInterval: 2000, enemySpeed: 1.5 },
-    { words: ["algorithm", "parasite", "nebula", "pulsar", "quasar", "quantum", "terraform", "radiance", "solar", "hydro", "machine", "infinity", "chaos", "gravity", "satellite", "distortion", "radiation", "electron", "singularity", "equation", "cryptic", "fortress", "doctrine", "mission", "hologram", "illusion", "abyss", "vector", "shadow", "synthetic", "drone", "theory", "fractal", "cybernet", "neutron", "scanner", "shield", "predator", "velocity", "mutant", "reactor", "android", "vacuum", "android", "dimension", "biome", "parallel", "exile", "eternal", "vortex"], spawnInterval: 1500, enemySpeed: 2 },
-    { words: ["hyperbole", "ultraviolet", "oscillate", "electromagnetic", "bioluminescent", "photosynthesis", "displacement", "chronoform", "superconductive", "thermodynamics", "exoplanet", "cosmology", "gene-splicing", "nanotechnology", "neuroscience", "archetype", "metamorphosis", "thermonuclear", "subatomic", "gravitational", "telecommunication", "biotechnology", "phytoplankton", "biogenesis", "cybernetics", "fusion", "nanomachine", "biotechnology", "paleontology", "neurotoxin", "radioactive", "transmutation", "biomechanical", "quantum leap", "string theory", "multiverse", "antimatter", "retrograde", "nanobot", "cyborg", "exoskeleton", "holography", "transistor", "wormhole", "electrostatic", "isotropic", "tachyon", "geneticist", "singularity", "transcendence"], spawnInterval: 1000, enemySpeed: 2.5 }
-];
-
-let words = waves[0].words; // Start with the first wave's words
+let words = ["cat", "dog", "sun", "moon", "tree", "rock", "car", "ship", "bird", "fish", "light", "snow", "cloud", "leaf", "chair", "book", "river", "wall", "sand", "shoe", "star", "house", "apple", "bread", "grass", "blue", "red", "ball", "game", "snow", "sky", "boat", "table", "glass", "milk", "bread", "ring", "shoe", "horse", "hat", "cup", "pen", "bell", "map", "egg", "bell", "rock", "bird", "wolf", "moon", "dragon", "comet", "galaxy", "laser", "engine", "cloud", "radar", "planet", "rocket", "spaceship", "wizard", "thunder", "tornado", "galaxy", "asteroid", "lightning", "plasma", "volcano", "ice", "ocean", "shield", "cannon", "nebula", "vortex", "lunar", "shield", "storm", "pulse", "wave", "force", "cosmic", "myth", "weapon", "armor", "comet", "steam", "orbital", "radio", "photon", "blade", "exo", "android", "gravity", "hacker", "reactor", "crystal", "energy", "rover", "nebula", "vortex", "algorithm", "parasite", "nebula", "pulsar", "quasar", "quantum", "terraform", "radiance", "solar", "hydro", "machine", "infinity", "chaos", "gravity", "satellite", "distortion", "radiation", "electron", "singularity", "equation", "cryptic", "fortress", "doctrine", "mission", "hologram", "illusion", "abyss", "vector", "shadow", "synthetic", "drone", "theory", "fractal", "cybernet", "neutron", "scanner", "shield", "predator", "velocity", "mutant", "reactor", "android", "vacuum", "android", "dimension", "biome", "parallel", "exile", "eternal", "vortex", "hyperbole", "ultraviolet", "oscillate", "electromagnetic", "bioluminescent", "photosynthesis", "displacement", "chronoform", "superconductive", "thermodynamics", "exoplanet", "cosmology", "gene-splicing", "nanotechnology", "neuroscience", "archetype", "metamorphosis", "thermonuclear", "subatomic", "gravitational", "telecommunication", "biotechnology", "phytoplankton", "biogenesis", "cybernetics", "fusion", "nanomachine", "biotechnology", "paleontology", "neurotoxin", "radioactive", "transmutation", "biomechanical", "quantum leap", "string theory", "multiverse", "antimatter", "retrograde", "nanobot", "cyborg", "exoskeleton", "holography", "transistor", "wormhole", "electrostatic", "isotropic", "tachyon", "geneticist", "singularity", "transcendence"];
 let activeEnemies = [];
 let score = 0;
-let gameRunning = false;
-let currentWave = 0;
-let enemiesDefeatedInWave = 0;
-let enemySpawnInterval;
+let gameRunning = false; // Flag to check if the game is running
 
 // Load sounds
-const typingSound = new Audio("typing-sound.mp3");
-const blastSound = new Audio("blast-sound.mp3");
-const bgMusic1 = new Audio("background1.mp3");
-const bgMusic2 = new Audio("background2.mp3");
+const typingSound = new Audio("typing-sound.mp3"); // Ensure correct path
+const blastSound = new Audio("blast-sound.mp3");   // Ensure correct path
+const bgMusic1 = new Audio("background1.mp3");     // Ensure correct path
+const bgMusic2 = new Audio("background2.mp3");     // Ensure correct path
 
+// Function to alternate background music
 function playBackgroundMusic() {
-    bgMusic1.currentTime = 0;
-    bgMusic2.currentTime = 0;
+    bgMusic1.currentTime = 0;  // Reset the first track position to start
+    bgMusic2.currentTime = 0;  // Reset the second track position to start
+
     bgMusic1.play().then(() => {
         bgMusic1.onended = () => {
             bgMusic2.play().then(() => {
                 bgMusic2.onended = () => {
-                    playBackgroundMusic();
+                    playBackgroundMusic(); // Go back to the beginning and play bgMusic1
                 };
             });
         };
-    }).catch(error => console.error("Error playing background music:", error));
+    }).catch(error => {
+        console.error("Error playing background music:", error);
+    });
 }
 
-// Function to play typing sound
+// Implementation for Start Button
+startButton.addEventListener("click", () => {
+    if (!gameRunning) {
+        playBackgroundMusic(); // Play background music on start
+        gameRunning = true; // Update flag to true
+        gameLoop(); // Start the game loop
+        setInterval(createEnemy, 2500); // Start spawning enemies every 2.5 seconds
+        startButton.style.display = 'none'; // Hide button after starting
+    }
+});
+
+// Play typing sound
 function playTypingSound() {
-    typingSound.currentTime = 0;
+    typingSound.currentTime = 0; // Reset sound to the start
     typingSound.play();
 }
 
-// Function to play blast sound
+// Play blast sound
 function playBlastSound() {
-    blastSound.currentTime = 0;
+    blastSound.currentTime = 0; // Reset sound to the start
     blastSound.play();
 }
 
@@ -59,31 +65,45 @@ function getRandomWord() {
     return words[Math.floor(Math.random() * words.length)];
 }
 
-// Create an enemy
 function createEnemy() {
+    if (!gameRunning) return; // Stop creating enemies if the game is over
+
     const enemy = document.createElement("div");
     enemy.classList.add("enemy");
     const word = getRandomWord();
     enemy.textContent = word;
-    enemy.style.left = `${Math.random() * 80 + 10}%`; // Ensure enemies spawn fully inside
+
+    // Temporary element to calculate the width of the enemy text
+    document.body.appendChild(enemy);
+    const wordWidth = enemy.offsetWidth; // Get the width of the word
+    document.body.removeChild(enemy); // Remove the temporary element
+
+    const gameAreaWidth = enemyArea.offsetWidth; // Get the width of the game area
+    const maxLeft = gameAreaWidth - wordWidth; // Calculate the maximum allowed left position
+
+    // Generate a random left position ensuring the word fits within the game area
+    const randomLeft = Math.random() * maxLeft;
+    enemy.style.left = `${randomLeft}px`; // Use px for precise positioning
     enemy.style.top = "0%";
     enemy.dataset.word = word;
-    enemyArea.appendChild(enemy);
+
+    enemyArea.appendChild(enemy); // Add enemy to the game area
     activeEnemies.push(enemy);
 }
 
 // Move enemies
 function moveEnemies() {
+    if (!gameRunning) return; // Stop moving enemies if the game has ended
+
     activeEnemies.forEach((enemy) => {
         const currentTop = parseFloat(enemy.style.top);
         if (currentTop >= 90) {
-            endGame(); // End the game if an enemy reaches the bottom
+            endGame(); // Call endGame function if an enemy reaches the bottom
         } else {
-            enemy.style.top = `${currentTop + waves[currentWave].enemySpeed}%`; // Adjust speed based on wave
+            enemy.style.top = `${currentTop + 1}%`; // Move enemy down
         }
     });
 }
-
 // Create and animate bullet
 function createBullet(enemy) {
     const bullet = document.createElement("div");
@@ -93,106 +113,91 @@ function createBullet(enemy) {
     const enemyRect = enemy.getBoundingClientRect();
     const gameAreaRect = enemyArea.getBoundingClientRect();
 
+    // Set initial bullet position at cannon
     bullet.style.left = `${cannonRect.left + cannonRect.width / 2 - gameAreaRect.left - 5}px`;
     bullet.style.top = `${cannonRect.top + cannonRect.height / 2 - gameAreaRect.top - 5}px`;
 
     enemyArea.appendChild(bullet);
 
+    // Calculate trajectory
     const xDistance = enemyRect.left + enemyRect.width / 2 - (cannonRect.left + cannonRect.width / 2);
     const yDistance = enemyRect.top + enemyRect.height / 2 - (cannonRect.top + cannonRect.height / 2);
 
+    // Animate bullet
     setTimeout(() => {
         bullet.style.transform = `translate(${xDistance}px, ${yDistance}px)`;
-    }, 10);
+    }, 10); // Small delay for transition to take effect
 
+    // Remove bullet and enemy upon collision
     setTimeout(() => {
         if (bullet) bullet.remove();
         if (enemy.parentElement === enemyArea) {
-            playBlastSound();
+            playBlastSound(); // Play blast sound when the enemy is hit
             enemyArea.removeChild(enemy);
             activeEnemies = activeEnemies.filter((e) => e !== enemy);
             score += 10;
             scoreDisplay.textContent = score;
-
-            enemiesDefeatedInWave++;
-            if (enemiesDefeatedInWave >= 10) {
-                advanceWave();
-            }
         }
-    }, 500);
+    }, 500); // Matches bullet animation duration
 }
 
 // Check input
 wordInput.addEventListener("input", () => {
-    playTypingSound();
-    const inputText = wordInput.value.toLowerCase();
+    playTypingSound(); // Play typing sound on every input
+    const inputText = wordInput.value.toLowerCase(); // Convert input to lowercase
     activeEnemies.forEach((enemy) => {
-        if (enemy.dataset.word.toLowerCase() === inputText) {
+        if (enemy.dataset.word.toLowerCase() === inputText) { // Compare words in lowercase
             createBullet(enemy);
-            wordInput.value = "";
+            wordInput.value = ""; // Clear input field
         }
     });
 });
 
-// Start wave
-function startWave() {
-    if (currentWave >= waves.length) {
-        endGame();
-        return;
-    }
-
-    const waveConfig = waves[currentWave];
-    words = waveConfig.words;
-
-    enemySpawnInterval = setInterval(createEnemy, waveConfig.spawnInterval);
-    console.log(`Wave ${currentWave + 1} started!`);
-}
-
-// Advance to the next wave
-function advanceWave() {
-    clearInterval(enemySpawnInterval);
-    currentWave++;
-    enemiesDefeatedInWave = 0;
-    startWave();
-}
-
 // Game loop
 function gameLoop() {
-    if (gameRunning) {
-        moveEnemies();
-        setTimeout(gameLoop, 200);
-    }
+    moveEnemies(); // Move enemies down the game area
+    setTimeout(gameLoop, 200); // Continue the game loop
 }
 
 // End the game
 function endGame() {
-    gameRunning = false;
-    clearInterval(enemySpawnInterval);
-    activeEnemies.forEach((enemy) => enemy.remove()); // Remove all enemies
-    activeEnemies = [];
-    finalScoreDisplay.textContent = score;
-    gameOverPopup.classList.remove("hidden");
-    wordInput.disabled = true;
+    if (!gameRunning) return; // Prevent multiple executions of endGame
+
+    gameRunning = false; // Set game running flag to false
+    clearInterval(enemySpawnInterval); // Stop enemy creation
+    finalScoreDisplay.innerText = score; // Update final score in the pop-up
+
+    // Stop all animations and keep enemies in place
+    activeEnemies.forEach(enemy => {
+        enemy.style.animationPlayState = "paused"; // Pause any CSS animations
+    });
+
+    wordInput.disabled = true; // Disable typing input
+    wordInput.value = ""; // Clear the input field
+    bgMusic1.pause(); // Stop background music
+    bgMusic2.pause(); // Stop alternate background music
+    gameOverPopup.classList.remove('hidden'); // Show the game-over pop-up
 }
 
-// Restart the game
-restartButton.addEventListener("click", () => {
-    location.reload();
-});
-
-// Start the game
+// Modified Start Button Logic
+let enemySpawnInterval; // Declare the interval globally
 startButton.addEventListener("click", () => {
     if (!gameRunning) {
-        playBackgroundMusic();
-        gameRunning = true;
-        startWave();
-        gameLoop();
-        startButton.style.display = "none";
-        wordInput.disabled = false;
+        playBackgroundMusic(); // Play background music on start
+        gameRunning = true; // Update flag to true
+        gameLoop(); // Start the game loop
+        enemySpawnInterval = setInterval(createEnemy, 2500); // Start spawning enemies every 2.5 seconds
+        startButton.style.display = 'none'; // Hide button after starting
+        wordInput.disabled = false; // Enable input if it was disabled
     }
 });
 
-// Hide the game-over popup initially
+// Restart the game by refreshing the page
+restartButton.addEventListener("click", () => {
+    location.reload(); // Reload the page to restart the game
+});
+
+// Ensure the pop-up is hidden when the page loads
 document.addEventListener("DOMContentLoaded", () => {
-    gameOverPopup.classList.add("hidden");
+    gameOverPopup.classList.add('hidden'); // Initially hide the pop-up
 });
