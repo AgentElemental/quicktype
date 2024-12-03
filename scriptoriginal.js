@@ -1,4 +1,3 @@
-// import words from "./words.json" assert { type: "json" };
 let words = {};
 
 (async function loadWords() {
@@ -13,6 +12,7 @@ let words = {};
 const enemyArea = document.getElementById("enemy-area");
 const wordInput = document.getElementById("word-input");
 const scoreDisplay = document.getElementById("score");
+const highScoreDisplay = document.getElementById("high-score");
 const cannon = document.getElementById("cannon");
 const startButton = document.getElementById("start-button"); // Reference to the start button
 const gameOverPopup = document.getElementById("game-over-popup"); // Reference to the game over popup
@@ -21,6 +21,7 @@ const restartButton = document.getElementById("restart-button"); // Reference to
 
 let activeEnemies = [];
 let score = 0;
+let high_score = Number(localStorage.getItem("high-score")) || 0;
 let words_on_screen = [];
 let gameRunning = false; // Flag to check if the game is running
 
@@ -29,6 +30,8 @@ const typingSound = new Audio("typing-sound.mp3"); // Ensure correct path
 const blastSound = new Audio("blast-sound.mp3"); // Ensure correct path
 const bgMusic1 = new Audio("background1.mp3"); // Ensure correct path
 const bgMusic2 = new Audio("background2.mp3"); // Ensure correct path
+
+highScoreDisplay.textContent = high_score;
 // const words = async () => {
 //   return await (await fetch("words.json")).json();
 // };
@@ -174,7 +177,10 @@ function createBullet(enemy) {
       enemyArea.removeChild(enemy);
       activeEnemies = activeEnemies.filter((e) => e !== enemy);
       score += 10;
+      high_score = score > high_score ? score : high_score;
+      localStorage.setItem("high-score", high_score);
       scoreDisplay.textContent = score;
+      highScoreDisplay.textContent = high_score;
     }
   }, 500); // Matches bullet animation duration
 }
@@ -182,7 +188,7 @@ function createBullet(enemy) {
 // Check input
 wordInput.addEventListener("input", () => {
   playTypingSound(); // Play typing sound on every input
-  const inputText = wordInput.value.toLowerCase(); // Convert input to lowercase
+  const inputText = wordInput.value.toLowerCase().trim(); // Convert input to lowercase
   activeEnemies.forEach((enemy) => {
     if (enemy.dataset.word.toLowerCase() === inputText) {
       // Compare words in lowercase
